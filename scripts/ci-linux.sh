@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
+# Linux validation entrypoint (Docker CMD and local use): format, analyze, test with coverage.
 set -euo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+source scripts/flutter-env.sh
 
-cmake --preset coverage
-cmake --build --preset coverage
-ctest --preset coverage --output-on-failure
-
-if find build/coverage -name '*.gcda' -print -quit | grep -q .; then
-    mkdir -p coverage
-    # The coverage floor applies to tested core logic, not presentation or test code.
-    gcovr --root . --filter 'src/qt/LauncherConfig.cpp' --fail-under-line 60 --xml-pretty --output coverage/coverage.xml
-    gcovr --root . --filter 'src/qt/LauncherConfig.cpp' --html-details coverage/coverage.html
-else
-    echo 'Coverage collection is deferred until product test targets are added.'
-fi
+flutter pub get
+./scripts/format-check.sh
+flutter analyze
+# lcov output lands in coverage/lcov.info; the C++ build kept a gcovr report in coverage/ too.
+flutter test --coverage

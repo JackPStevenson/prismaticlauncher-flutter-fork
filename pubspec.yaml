@@ -1,0 +1,40 @@
+# Flutter port of Prismatic Launcher (replaces CMakeLists.txt + vcpkg.json).
+name: prismatic_launcher
+description: "Prismatic Launcher: a Stardew Valley launcher (Flutter experiment)."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+# Each dependency replaces a Qt module or vcpkg library; keep this list small.
+dependencies:
+  flutter:
+    sdk: flutter
+  archive: ^4.0.0        # libarchive (ZIP only; see lib/mods/mod_installer.dart)
+  args: ^2.5.0           # QCommandLineParser
+  crypto: ^3.0.0         # QCryptographicHash (ChickPix fingerprints)
+  desktop_drop: ^0.5.0   # Qt drag-and-drop events for the mod drop zone
+  file_selector: ^1.0.0  # QFileDialog
+  http: ^1.2.0           # QNetworkAccessManager
+  image: ^4.2.0          # QImageReader (size limits before decoding)
+  path: ^1.9.0           # QDir / QFileInfo path helpers
+  url_launcher: ^6.3.0   # QDesktopServices::openUrl
+  material_ui: ^1.11.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  # Replaces resources.qrc.
+  assets:
+    - resources/SMAPI_mascot.png
+    - resources/cogwheel.png
+    - resources/logo.png
+    - chickens/default.png
+    - chickens/spring.png
+    - chickens/summer.png
+    - chickens/manifest.json

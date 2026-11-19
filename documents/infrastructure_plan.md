@@ -2,12 +2,33 @@
 
 > Planning only. This document describes future infrastructure work. No installations, configuration changes, containers, workflows, deployments, or other implementation files were created by the infrastructure-planning process.
 
+## 0. Flutter fork amendment (2026-11-19)
+
+This fork (`prismaticlauncher-flutter`) is an experiment that replaces Qt with Flutter. It is
+maintained by one developer and is not merged upstream. The sections below are kept as the
+upstream record; where they conflict with this table, this table wins for the fork.
+
+| Upstream decision | Fork replacement |
+|---|---|
+| C++20 + Qt 6 Widgets | Dart 3 + Flutter (stable, verified on 3.50.0) with `material_ui` |
+| vcpkg manifest and baseline | `pubspec.yaml` + committed `pubspec.lock` |
+| CMake + CTest | Flutter tool (`flutter build`, `flutter test`); generated runners in `linux/`, `windows/`, `macos/` |
+| Qt Test (unit, integration, widget) | `flutter_test` (`test()` and `testWidgets()`) |
+| gcovr coverage | `flutter test --coverage` (lcov at `coverage/lcov.info`) |
+| clang-format / clang-tidy / Cppcheck | `dart format` (100 columns) / `flutter analyze` with `flutter_lints` |
+| CodeQL for C++ | Removed (no C++ application code); Gitleaks remains |
+| libarchive (ZIP, 7z, RAR) | Pure-Dart `archive` package (ZIP only) |
+| Native Windows/macOS CI matrix | Not run; one Linux job covers format, analyze, and test |
+
+Unchanged: local SQLite as the future structured store, Docker for Linux validation only, and
+GitHub Releases with portable archives once `packaging/` exists.
+
 ## 1. Project and User Experience
 
 - **Application:** Prismatic Launcher, a Stardew Valley mod manager and installer.
 - **Primary users:** Individual Stardew Valley players.
 - **Primary user task:** Locate a local Stardew Valley installation, install and manage mods, and maintain mod profiles.
-- **Selected platform:** Cross-platform native desktop application.
+- **Selected platform:** Cross-platform desktop application (Qt upstream; Flutter in this fork).
 - **User-experience rationale:** Direct, reliable access to game and mod folders is essential; one native codebase should serve Windows, macOS, and Linux.
 - **Required operating systems:** Windows, macOS, and Linux desktop systems supported by Stardew Valley.
 - **Offline or native-device requirements:** Core profile and file management work offline; the app needs local filesystem access. Downloading public mods naturally requires connectivity.

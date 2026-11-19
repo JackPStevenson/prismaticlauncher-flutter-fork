@@ -1,12 +1,8 @@
 .git
 .agents
+.dart_tool
 build
-out
 coverage
-vcpkg_installed
-vcpkg/buildtrees
-vcpkg/packages
-vcpkg/downloads
 .cache
 .env
 .env.*

@@ -1,5 +1,7 @@
 # Nexus mod browser
 
+> **Flutter fork:** this design record describes the original C++/Qt implementation. In this fork the behavior lives in `lib/ui/mod_browser.dart`, `lib/ui/nexus_page.dart`, and `test/ui/mod_pagination_test.dart`. References to Qt, CMake, and `src/` are historical.
+
 Choose **Browse Nexus mods** in the library, or open an instance and choose
 **Mods**, to browse Stardew Valley mods, sorted by most recently updated.
 Each page loads up to **50 mods**. Use **Previous** and **Next** below the list;

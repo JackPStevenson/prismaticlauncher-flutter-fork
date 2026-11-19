@@ -1,0 +1,21 @@
+# Replaces .clang-tidy / cppcheck.cfg: `flutter analyze` runs these lints.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - windows/**
+    - macos/**
+    - linux/**
+  language:
+    strict-casts: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    - prefer_final_locals
+    - unawaited_futures
+
+# Matches the 100-column limit of the former .clang-format.
+formatter:
+  page_width: 100

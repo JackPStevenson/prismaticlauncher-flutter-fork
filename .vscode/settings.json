@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/home/jpste/Git/prismaticlauncher",
+    "dart.flutterSdkPath": "/home/jpste/development/flutter",
     "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
     "chat.tools.terminal.autoApprove": {
         "code": true,

@@ -1,31 +1,15 @@
-# Build output and CMake state
+# Build output and Flutter/Dart tool state
 /build/
 /out/
-CMakeCache.txt
-CMakeFiles/
-CTestTestfile.cmake
-Testing/
-compile_commands.json
-
-# CMake local cache
-CMakeLists.txt.user
-
-#qtcreator user settings
-/.qtcreator/
+.dart_tool/
+.flutter-plugins-dependencies
+*.iml
+.metadata.local
 
 # Coverage, static-analysis, and test reports
 /coverage/
-*.gcda
-*.gcno
-*.gcov
-cppcheck.xml
-clang-tidy*.yaml
 
-# Local dependencies and tool caches
-/vcpkg_installed/
-/vcpkg/buildtrees/
-/vcpkg/packages/
-/vcpkg/downloads/
+# Local tool caches
 /.cache/
 
 # Logs and local application data

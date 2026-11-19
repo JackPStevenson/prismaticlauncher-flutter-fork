@@ -1,5 +1,7 @@
 # Local mod installation
 
+> **Flutter fork:** this design record describes the original C++/Qt implementation. In this fork the behavior lives in `lib/mods/mod_installer.dart`, `lib/ui/mod_install_page.dart`, and `test/mods/mod_installer_test.dart` (ZIP only; 7z/RAR are not supported in the Flutter build). References to Qt, CMake, and `src/` are historical.
+
 ## Objective and scope
 
 Install manually downloaded Stardew Valley SMAPI mods and content packs into the

@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
+# Replaces the clang-format check: fails when any Dart file is not formatted.
 set -euo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+source scripts/flutter-env.sh
 
-mapfile -d '' sources < <(find src tests -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.h' -o -name '*.hpp' \) -print0 2>/dev/null || true)
-
-if ((${#sources[@]} == 0)); then
-    echo 'No C++ source files exist yet; clang-format check is deferred.'
-    exit 0
-fi
-
-clang-format --dry-run --Werror "${sources[@]}"
+dart format --output=none --set-exit-if-changed lib bin test

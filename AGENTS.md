@@ -2,14 +2,15 @@
 
 ## Project status
 
-Prismatic Launcher is a C++20/Qt 6 desktop project with application sources, tests, and build/CI infrastructure. `documents/infrastructure_plan.md` records the approved infrastructure decisions. Product changes follow the user's requested feature scope; infrastructure-only tasks stay within the infrastructure boundaries below.
+Prismatic Launcher (this fork) is a Flutter/Dart desktop experiment ported from the C++20/Qt 6 upstream project. It has application sources, tests, and build/CI infrastructure; it is not merged back upstream. `documents/infrastructure_plan.md` records the approved infrastructure decisions. Product changes follow the user's requested feature scope; infrastructure-only tasks stay within the infrastructure boundaries below.
 
 ## Repository map
 
-- `CMakeLists.txt`, `CMakePresets.json` — CMake/CTest configuration.
-- `vcpkg.json`, `vcpkg-configuration.json` — C++ dependency manifest and pinned registry baseline.
+- `pubspec.yaml`, `pubspec.lock` — Dart/Flutter dependencies.
+- `analysis_options.yaml` — analyzer lints and the 100-column formatter width.
 - `scripts/` — infrastructure checks and Linux CI entrypoint.
-- `tests/infrastructure/`, `tests/ui/`, `tests/smapi/` — infrastructure checks and Qt application/service tests.
+- `tests/infrastructure/` — Python checks for agent customizations.
+- `test/` — Flutter tests (`flutter test`) for services and UI.
 - `Dockerfile.ci`, `.dockerignore` — Linux validation infrastructure only.
 - `.github/workflows/pr-checks.yml`, `.github/workflows/release.yml` — CI and guarded release workflows.
 - `README.md`, `documents/infrastructure_plan.md` — developer documentation and approved infrastructure plan.
@@ -18,7 +19,8 @@ Prismatic Launcher is a C++20/Qt 6 desktop project with application sources, tes
 - `.github/agents/*.agent.md` — generated VS Code agent roles; regenerate with `python3 scripts/sync-vscode-agents.py` (Python 3.11+), verify with `--check`. Role sources are `.agents/*.toml` and `.codex/agents/*.toml`. The command also validates canonical skills in `.agents/skills/`; do not create duplicate skill entries under `.github/skills/`.
 - `.codex/agents/*.toml`, `.codex/config.toml` — native Codex feature workers and project delegation settings.
 - `documents/templates/feature-request.md` — reusable feature request template.
-- `src/qt/`, `src/smapi/` — native Qt application and SMAPI services.
+- `lib/ui/`, `lib/smapi/`, `lib/mods/`, `lib/farmpack/`, `lib/nexus_fetch_list/` — Flutter application and services; each file names the C++ source it was ported from.
+- `linux/`, `windows/`, `macos/` — generated Flutter desktop runners.
 
 ## Required reading and skill selection
 
@@ -39,8 +41,8 @@ Prefer visible Sessions/chat delegation when the client exposes `create_session`
 ## Boundaries
 
 - Do not add product UI, game discovery, mod-management behavior, domain schema, or release packaging while doing infrastructure-only work.
-- Do not change the selected C++20, Qt 6, vcpkg, SQLite, Docker, or GitHub Release decisions without revising `documents/infrastructure_plan.md` through `infra-planner`.
-- Do not commit secrets, signing certificates, generated build output, coverage reports, vcpkg installations, or local game/mod data.
+- Do not change the selected Flutter, SQLite, Docker, or GitHub Release decisions without revising `documents/infrastructure_plan.md` through `infra-planner`.
+- Do not commit secrets, signing certificates, generated build output, coverage reports, `.dart_tool/`, or local game/mod data.
 - Docker validates Linux only; it does not replace native Windows/macOS packaging, signing, or macOS notarization.
 
 ## Code readability and documentation
@@ -51,28 +53,27 @@ Apply these conventions to new or substantially changed code, including tests an
 
 - Prefer clear, explicit code over compact expressions. Use descriptive names that express purpose, units, and boolean meaning; follow the surrounding naming conventions.
 - Give each function one clear responsibility. Use guard clauses to keep the main flow easy to follow, and extract named helpers when they clarify a meaningful operation. Avoid nested ternaries, long compound conditions, and abstractions that add indirection without clarity.
-- Use named intermediate values for complex expressions and constants for meaningful repeated values. Make ownership, lifetime, side effects, and error handling clear, especially around Qt objects and filesystem operations.
-- Follow `.clang-format` for C++ formatting. Use the existing language conventions for scripts and tooling.
+- Use named intermediate values for complex expressions and constants for meaningful repeated values. Make ownership, lifetime, side effects, and error handling clear, especially around widget state, isolates, processes, and filesystem operations.
+- Format Dart with `dart format` (100 columns, set in `analysis_options.yaml`). Use the existing language conventions for scripts and tooling.
 
 ### Function summaries
 
 - Add a concise, accurate summary to every new or substantially changed named function, method, constructor, and test function or helper. Generated code and declarations explicitly marked `= default` or `= delete` are exempt.
-- For C++, use `/// @brief` followed by a sentence describing the function's purpose and observable behavior. Put it immediately above the declaration in the header; for functions without a separate declaration, put it above the definition. Keep one authoritative summary rather than copying it into both header and source.
+- For Dart, use `/// @brief` followed by a sentence describing the function's purpose and observable behavior, immediately above the declaration. (This keeps the upstream C++ convention so ported files read the same as their originals.)
 - Add `/// @param`, `/// @return`, and `/// @throws` only when they explain a meaningful contract: valid inputs, units, ownership transfer, output values, failure behavior, or exceptions. Explain both outcomes of boolean results. Do not add return documentation to constructors or void functions, and do not merely repeat types or parameter names.
 - Document relevant side effects, preconditions, thread requirements, or asynchronous completion in the same block when callers need them. Describe actual behavior verified in the implementation; do not invent guarantees.
 - For Python, use a short docstring; for shell and CMake functions, use a short comment above the definition. Test summaries should state the scenario and expected outcome.
 
-Example of a constructor summary in its header:
+Example of a constructor summary:
 
-```cpp
-/// @brief Takes ownership of the services used to install and launch SMAPI.
-SmapiManager(std::unique_ptr<SmapiInstaller> installer,
-             std::unique_ptr<SmapiLauncher> launcher);
+```dart
+/// @brief Takes the launcher used to start SMAPI after a successful inspection.
+SmapiManager(this._launcher);
 ```
 
 ### Comments within functions
 
-- Use `//` comments in C++ to explain intent, invariants, platform constraints, workarounds, or ordering requirements that are not clear from the code. Briefly introduce a complex processing stage when it helps the reader follow the function.
+- Use `//` comments to explain intent, invariants, platform constraints, workarounds, or ordering requirements that are not clear from the code. Briefly introduce a complex processing stage when it helps the reader follow the function.
 - Keep comments factual, concise, and in complete sentences. Explain why a decision is necessary; avoid narrating obvious statements or adding a comment to every line. Prefer a clearer name or a small helper when a comment would only explain a dense expression.
 - Update or remove stale comments as behavior changes. Preserve useful rationale, and do not leave commented-out implementations.
 
@@ -88,6 +89,7 @@ Run these commands from the repository root when their prerequisites are install
 ./scripts/verify-infrastructure.sh
 ./scripts/format-check.sh
 ./scripts/static-analysis.sh
+flutter test
 docker build --pull=false -f Dockerfile.ci -t prismaticlauncher-ci:local .
 docker run --rm prismaticlauncher-ci:local
 ```

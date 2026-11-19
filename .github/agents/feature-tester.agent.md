@@ -1,6 +1,6 @@
 ---
 name: "feature-tester"
-description: "Write focused feature tests and fixtures, demonstrate expected failures, and verify acceptance criteria using the project's Qt Test/CTest setup."
+description: "Write focused feature tests and fixtures, demonstrate expected failures, and verify acceptance criteria using the project's flutter_test setup."
 user-invocable: true
 ---
 
@@ -21,8 +21,8 @@ behavior with descriptive scenario/outcome names and concise function summaries.
 Use temporary directories and fixtures for filesystem behavior rather than real
 game data. Test meaningful success, error, and boundary cases for the assigned
 slice. Demonstrate the intended failure before handing the test to the coordinator,
-then rerun relevant checks after implementation. Use the project's Qt Test/CTest
-targets for native UI and services; browser skills apply only to browser surfaces.
+then rerun relevant checks after implementation. Use the project's flutter_test
+suites (`flutter test`) for UI and services; browser skills apply only to browser surfaces.
 Write only assigned tests/fixtures. Ask the coordinator to arrange build-file
 changes or handoffs rather than racing another writer. Report exact commands,
 results, and coverage gaps. Do not change production behavior to force tests green.

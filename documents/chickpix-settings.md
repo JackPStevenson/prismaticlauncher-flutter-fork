@@ -1,5 +1,7 @@
 # ChickPix settings
 
+> **Flutter fork:** this design record describes the original C++/Qt implementation. In this fork the behavior lives in `lib/ui/chick_pix_dialog.dart`, `lib/ui/chick_pix_images.dart`, and `test/ui/launcher_test.dart`. References to Qt, CMake, and `src/` are historical.
+
 ## Objective and acceptance criteria
 
 Let launcher users choose bundled or custom ChickPix artwork and adjust its

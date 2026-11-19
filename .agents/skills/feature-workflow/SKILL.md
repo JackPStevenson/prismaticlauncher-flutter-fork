@@ -27,8 +27,8 @@ user wants a reusable starting request.
   throughout and `code-review-and-quality` before handoff. Root readability and
   function-summary rules apply to production code, tests, and helpers.
 - Add `api-and-interface-design`, `security-and-hardening`, `ci-cd-and-automation`,
-  or `performance-optimization` only when the task calls for them. This is a native
-  Qt application: use Qt Test for widget verification; browser skills apply only
+  or `performance-optimization` only when the task calls for them. This is a Flutter
+  desktop application: use `flutter_test` widget tests for UI verification; browser skills apply only
   if the feature actually introduces or changes a browser surface.
 
 ## Coordinate the stages
@@ -95,8 +95,8 @@ existing `.agents/*.toml` personas remain available for separate specialized tas
 
 ## Verify and hand off
 
-- Verify with the actual CMake/CTest targets and relevant formatting/static checks.
-  Qt UI tests use the configured offscreen backend. Report native Windows/macOS
+- Verify with `flutter test` and the relevant formatting/static checks
+  (`dart format`, `flutter analyze`). Report native Windows/macOS
   checks as unverified unless they were actually run; Linux checks alone do not
   establish cross-platform compatibility.
 - Inspect the final diff and `git diff --check`. Ensure new sources and resources

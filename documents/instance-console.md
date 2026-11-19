@@ -1,5 +1,7 @@
 # Instance console
 
+> **Flutter fork:** this design record describes the original C++/Qt implementation. In this fork the behavior lives in `lib/ui/log_window.dart`, `lib/ui/instance_window.dart`, and `test/ui/log_window_test.dart`. References to Qt, CMake, and `src/` are historical.
+
 ## Objective and acceptance criteria
 
 The instance window's Console page owns the live game log. Library launches,
